@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import TimeSlot, Appointment
 from rest_framework import serializers
 from .models import Blog
-
+from .models import Inquiry
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
@@ -38,3 +38,9 @@ class AppointmentSerializer(serializers.ModelSerializer):
         if Appointment.objects.filter(time_slot=value).exists():
             raise serializers.ValidationError("This time slot is already booked.")
         return value
+    
+    
+class InquirySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inquiry
+        fields = "__all__"

@@ -4,14 +4,11 @@ from rest_framework.views import APIView
 from django.core.mail import send_mail
 from django.utils.timezone import make_aware
 from django.utils.timezone import localtime
-# from pytz import timezone as pytz_timezone
+from pytz import timezone as pytz_timezone
 from datetime import datetime
-from .models import TimeSlot, Appointment
-from .serializers import TimeSlotSerializer, AppointmentSerializer
+from .models import TimeSlot, Appointment, Blog, Inquiry
+from .serializers import TimeSlotSerializer, AppointmentSerializer, BlogSerializer, InquirySerializer
 from rest_framework import generics
-from .models import Blog
-from .serializers import BlogSerializer
-
 # List all blogs or create a new one
 class BlogListCreateView(generics.ListCreateAPIView):
     queryset = Blog.objects.all().order_by('-created_at')
@@ -115,3 +112,15 @@ class BookAppointmentView(APIView):
         )
 
         return Response({"message": "Appointment booked successfully!"}, status=status.HTTP_201_CREATED)
+
+
+class InquiryCreateView(generics.CreateAPIView):
+    queryset = Inquiry.objects.all()
+    serializer_class = InquirySerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Your inquiry has been submitted."}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

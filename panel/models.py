@@ -50,3 +50,14 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Inquiry(models.Model):
+    name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Inquiry from {self.name} - {self.email}"
