@@ -1,12 +1,39 @@
 from rest_framework import serializers
 from .models import TimeSlot, Appointment
 from rest_framework import serializers
-from .models import Blog
+from rest_framework import serializers
+from .models import Blog, BlogSection, Author
+from .models import Inquiry
+import pytz
+from django.utils.timezone import localtime
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ['name', 'image']
+
+class BlogSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogSection
+        fields = ['heading', 'content']
 
 class BlogSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer()
+    sections = BlogSectionSerializer(many=True)
+
     class Meta:
         model = Blog
-        fields = '__all__'
+        fields = [
+            'id', 
+            'title', 
+            'slug', 
+            'image', 
+            'author', 
+            'reading_time', 
+            'created_at', 
+            'sections'
+        ]
+
 
 class TimeSlotSerializer(serializers.ModelSerializer):
     formatted_start_time = serializers.SerializerMethodField()
@@ -38,3 +65,8 @@ class AppointmentSerializer(serializers.ModelSerializer):
         if Appointment.objects.filter(time_slot=value).exists():
             raise serializers.ValidationError("This time slot is already booked.")
         return value
+    
+class InquirySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inquiry
+        fields = "__all__"
