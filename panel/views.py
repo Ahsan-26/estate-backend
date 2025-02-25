@@ -6,16 +6,16 @@ from django.utils.timezone import make_aware
 from django.utils.timezone import localtime
 from pytz import timezone as pytz_timezone
 from datetime import datetime
-from .models import TimeSlot, Appointment, Blog, Inquiry
-from .serializers import TimeSlotSerializer, AppointmentSerializer, BlogSerializer, InquirySerializer
+from .models import TimeSlot, Appointment, Inquiry, Blog
+from .serializers import TimeSlotSerializer, AppointmentSerializer, BlogSerializer,InquirySerializer
 from rest_framework import generics
-# List all blogs or create a new one
-class BlogListCreateView(generics.ListCreateAPIView):
-    queryset = Blog.objects.all().order_by('-created_at')
-    serializer_class = BlogSerializer
 
-# Retrieve, update, or delete a specific blog
-class BlogRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+class BlogDetailAPIView(generics.RetrieveAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    lookup_field = 'pk'
+
+class BlogListAPIView(generics.ListAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
 
@@ -59,6 +59,7 @@ class BookAppointmentView(APIView):
         email = request.data.get("email")
         phone = request.data.get("phone")
         query = request.data.get("query")
+        location = request.data.get("location")
 
         if not all([time_slot_id, name, email, phone, query]):
             return Response({"error": "All fields are required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -74,6 +75,7 @@ class BookAppointmentView(APIView):
             email=email,
             phone=phone,
             query=query,
+            location=location,
             time_slot=time_slot,
             service_type=service_type 
         )
@@ -113,14 +115,9 @@ class BookAppointmentView(APIView):
 
         return Response({"message": "Appointment booked successfully!"}, status=status.HTTP_201_CREATED)
 
-
 class InquiryCreateView(generics.CreateAPIView):
     queryset = Inquiry.objects.all()
     serializer_class = InquirySerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Your inquiry has been submitted."}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

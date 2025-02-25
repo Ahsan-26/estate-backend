@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+from django.utils.text import slugify
 
 class TimeSlot(models.Model):
     date = models.DateField()
@@ -22,6 +23,7 @@ class Appointment(models.Model):
     email = models.EmailField()
     phone = models.CharField(max_length=15)
     query = models.TextField()
+    location = models.CharField(max_length=255)
     time_slot = models.OneToOneField(TimeSlot, on_delete=models.CASCADE)
     service_type = models.CharField(max_length=10, choices=SERVICE_CHOICES) 
     def __str__(self):
@@ -40,17 +42,39 @@ def mark_slot_as_available(sender, instance, **kwargs):
     
 from django.db import models
 
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='authors/')
+
+    def __str__(self):
+        return self.name
+
 class Blog(models.Model):
-    title = models.CharField(max_length=255)
-    author = models.CharField(max_length=100)
-    author_image = models.ImageField(upload_to='authors/', blank=True, null=True)
-    content = models.TextField()
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
     image = models.ImageField(upload_to='blogs/')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    reading_time = models.PositiveIntegerField(help_text="Reading time in minutes")
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
 
+class BlogSection(models.Model):
+    blog = models.ForeignKey(Blog, related_name='sections', on_delete=models.CASCADE)
+    heading = models.CharField(max_length=200)
+    content = models.TextField()
+
+    def __str__(self):
+        return f"{self.blog.title} - {self.heading}"
 
 class Inquiry(models.Model):
     name = models.CharField(max_length=255)
@@ -59,5 +83,5 @@ class Inquiry(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def _str_(self):
         return f"Inquiry from {self.name} - {self.email}"
