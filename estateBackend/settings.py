@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import dj_database_url
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS =["estate-backend-q57o.onrender.com"]
 
 
 # Application definition
@@ -88,19 +89,23 @@ WSGI_APPLICATION = 'estateBackend.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'estate',
+#         'USER': 'postgres',  
+#         'PASSWORD': 'admin',  
+#         'HOST': 'localhost', 
+#         'PORT': '5432',  
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'estate',
-        'USER': 'postgres',  
-        'PASSWORD': 'admin',  
-        'HOST': 'localhost', 
-        'PORT': '5432',  
-    }
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
 
-
-
+if DATABASES['default']:
+    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
