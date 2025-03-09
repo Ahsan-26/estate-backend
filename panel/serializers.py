@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework import serializers
 from .models import Blog, BlogSection, Author
 from .models import Inquiry
-import pytz
+# import pytz
 from django.utils.timezone import localtime
 
 class AuthorSerializer(serializers.ModelSerializer):
