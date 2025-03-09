@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS =["estate-backend-q57o.onrender.com"]
+ALLOWED_HOSTS =["estate-backend.onrender.com",
+                "estate-backend-q57o.onrender.com",
+                ]
 
 
 # Application definition
@@ -89,21 +91,20 @@ WSGI_APPLICATION = 'estateBackend.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'estate',
-#         'USER': 'postgres',  
-#         'PASSWORD': 'admin',  
-#         'HOST': 'localhost', 
-#         'PORT': '5432',  
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'estate',
+        'USER': 'postgres',  
+        'PASSWORD': 'admin',  
+        'HOST': 'localhost', 
+        'PORT': '5432',  
+    }
+}
 
 DATABASES = {
     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
-
 if DATABASES['default']:
     DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 # Password validation
@@ -149,11 +150,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # This is correct for Gmail
-EMAIL_PORT = 587  # Use 587 for TLS
-EMAIL_USE_TLS = True  # Keep this as True
-EMAIL_HOST_USER = 'rehankhan.upr@gmail.com'  # Replace with your actual Gmail address
-EMAIL_HOST_PASSWORD = 'wkeidudcklbwvqby'  # Replace with a Gmail App Password
+EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_PORT = 587  
+EMAIL_USE_TLS = True  
+EMAIL_HOST_USER = 'rehankhan.upr@gmail.com' 
+EMAIL_HOST_PASSWORD = 'wkeidudcklbwvqby' 
 
 import os
 
