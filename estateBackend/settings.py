@@ -25,9 +25,10 @@ SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS =["estate-backend-q57o.onrender.com",
-                "https://estate-frontend-bay.vercel.app/",
-                ]
+ALLOWED_HOSTS =[
+    "https://estate-frontend-bay.vercel.app/",
+    "estate-backend-q57o.onrender.com",
+     ]
 
 CORS_ALLOWED_ORIGINS = [
     "https://estate-frontend-bay.vercel.app/",  
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,12 +63,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
+    
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Allow React frontend
-]
+
 
 ROOT_URLCONF = 'estateBackend.urls'
 
