@@ -26,15 +26,17 @@ SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)
 DEBUG = False
 
 ALLOWED_HOSTS =["estate-backend-q57o.onrender.com",
-                "https://e-state-6xcr.vercel.app/",
+                "https://estate-frontend-bay.vercel.app/",
                 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://e-state-6xcr.vercel.app/",  
+    "https://estate-frontend-bay.vercel.app/",  
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://e-state-6xcr.vercel.app/",
+    "https://estate-frontend-bay.vercel.app/",
+    "https://e-state-6xcr.vercel.app/"
+    
 ]
 
 # Application definition
