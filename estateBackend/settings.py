@@ -25,11 +25,13 @@ SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS =["estate-backend.onrender.com",
-                "estate-backend-q57o.onrender.com",
+ALLOWED_HOSTS =["estate-backend-q57o.onrender.com",
+                "https://e-state-6xcr.vercel.app/",
                 ]
 
-
+CORS_ALLOWED_ORIGINS = [
+    "https://e-state-6xcr.vercel.app/",  
+]
 # Application definition
 
 INSTALLED_APPS = [
