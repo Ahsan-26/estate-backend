@@ -32,6 +32,11 @@ ALLOWED_HOSTS =["estate-backend-q57o.onrender.com",
 CORS_ALLOWED_ORIGINS = [
     "https://e-state-6xcr.vercel.app/",  
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://e-state-6xcr.vercel.app/",
+]
+
 # Application definition
 
 INSTALLED_APPS = [
