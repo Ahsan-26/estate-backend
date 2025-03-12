@@ -23,20 +23,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS =[
-    "https://estate-frontend-bay.vercel.app/",
+ALLOWED_HOSTS = [
+    "estate-frontend-bay.vercel.app",
     "estate-backend-q57o.onrender.com",
-     ]
-
+    "127.0.0.1",
+    "localhost",
+]
 CORS_ALLOWED_ORIGINS = [
-    "https://estate-frontend-bay.vercel.app/",  
+    "https://estate-frontend-bay.vercel.app",  
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://estate-frontend-bay.vercel.app/",
-    "https://e-state-6xcr.vercel.app/"
+    "https://estate-frontend-bay.vercel.app",
+    "https://e-state-6xcr.vercel.app"
     
 ]
 
@@ -63,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
     
 ]
 
@@ -151,7 +153,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
