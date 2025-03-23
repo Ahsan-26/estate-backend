@@ -116,7 +116,7 @@ import dj_database_url
 import os
 DATABASES = {
     "default": dj_database_url.config(
-        default="postgresql://estate_tjf4_user:ew7te8lz3ARqHMiDdtrc6AgmaDo0N5BP@dpg-cv6mie8gph6c73do4600-a.oregon-postgres.render.com/estate_tjf4",
+        default="postgresql://estate_one_user:eSO1sAjk4TzxMwhxyFjKku2vTXcMa7tI@dpg-cvfb1ipopnds73b8er7g-a.oregon-postgres.render.com/estate_one",
         engine="django.db.backends.postgresql",
     )
 }
