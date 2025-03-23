@@ -20,14 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)'
+# SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key')  # Use env var in production
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'  # False in production
 
 ALLOWED_HOSTS = [
     "estate-frontend-bay.vercel.app",
-    "estate-backend-q57o.onrender.com",
+     ".onrender.com",
     "127.0.0.1",
     "localhost",
 ]
@@ -114,12 +117,22 @@ WSGI_APPLICATION = 'estateBackend.wsgi.application'
 # }
 import dj_database_url
 import os
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default="postgresql://estate_one_user:eSO1sAjk4TzxMwhxyFjKku2vTXcMa7tI@dpg-cvfb1ipopnds73b8er7g-a.oregon-postgres.render.com/estate_one",
+#         engine="django.db.backends.postgresql",
+#     )
+# }
 DATABASES = {
     "default": dj_database_url.config(
-        default="postgresql://estate_one_user:eSO1sAjk4TzxMwhxyFjKku2vTXcMa7tI@dpg-cvfb1ipopnds73b8er7g-a.oregon-postgres.render.com/estate_one",
-        engine="django.db.backends.postgresql",
+        default=os.environ.get('DATABASE_URL'),  # Read from environment
+        engine='django.db.backends.postgresql',
     )
 }
+
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
