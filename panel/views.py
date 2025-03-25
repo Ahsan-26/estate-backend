@@ -120,4 +120,16 @@ class InquiryCreateView(generics.CreateAPIView):
     serializer_class = InquirySerializer
 
     def create(self, request, *args, **kwargs):
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Create the serializer instance with the request data
+        serializer = self.get_serializer(data=request.data)
+        
+        # Check if the serializer is valid
+        if serializer.is_valid():
+            # Save the validated data (if needed)
+            serializer.save()
+
+            # Return success response
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            # If validation fails, return the errors
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
