@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from django.core.mail import send_mail
 from django.utils.timezone import make_aware
 from django.utils.timezone import localtime
-# from pytz import timezone as pytz_timezone
+from pytz import timezone as pytz_timezone
 from datetime import datetime
 from .models import TimeSlot, Appointment, Inquiry, Blog
 from .serializers import TimeSlotSerializer, AppointmentSerializer, BlogSerializer,InquirySerializer
