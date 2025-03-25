@@ -14,5 +14,8 @@ services:
     sync: false
   region: singapore
   buildCommand: pip install -r requirements.txt
-  startCommand: gunicorn estateBackend.wsgi:application
+  startCommand: |
+    python manage.py migrate && \
+    python manage.py shell -c "from django.contrib.auth.models import User; User.objects.get_or_create(username='admin', email='admin@example.com', password='admin123')" && \
+    gunicorn estateBackend.wsgi:application
 version: "1"
