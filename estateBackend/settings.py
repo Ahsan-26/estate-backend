@@ -31,18 +31,23 @@ DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'  # False in productio
 
 ALLOWED_HOSTS = [
     "estate-frontend-bay.vercel.app",
+    "https://www.estateone.in/",
+    "estateone.in",
      ".onrender.com",
     "127.0.0.1",
     "localhost",
 ]
 CORS_ALLOWED_ORIGINS = [
-    "https://estate-frontend-bay.vercel.app",  
+    "https://estate-frontend-bay.vercel.app", 
+    "https://www.estateone.in",
+    "https://estateone.in",  # ✅ Add root domain without www
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://estate-frontend-bay.vercel.app",
-    "https://e-state-6xcr.vercel.app"
-    
+    "https://e-state-6xcr.vercel.app",
+    "https://www.estateone.in",
+    "https://estateone.in",  # ✅ Add root domain without www
 ]
 
 # Application definition
