@@ -9,42 +9,45 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+#from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+#env_path = BASE_DIR / '.env'  # Define env_path
 
-
+#load_dotenv(env_path)  
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)'
+# SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
 
-ALLOWED_HOSTS =[
-    "https://estate-frontend-bay.vercel.app/",
-    "estate-backend-q57o.onrender.com",
-    "localhost",
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key')  # Use env var in production
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'  # False in production
+
+ALLOWED_HOSTS = [
+    "estate-frontend-bay.vercel.app",
+    "https://www.estateone.in/",
+    "estateone.in",
+     ".onrender.com",
     "127.0.0.1",
-   
-     ]
-
+    "localhost",
+]
 CORS_ALLOWED_ORIGINS = [
-    
-    "https://estate-frontend-bay.vercel.app/",  
-     "http://localhost:3000",
+    "https://estate-frontend-bay.vercel.app", 
+    "https://www.estateone.in",
+    "https://estateone.in",  # ✅ Add root domain without www
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-   
-    "https://estate-frontend-bay.vercel.app/",
-    "https://e-state-6xcr.vercel.app/",
-     "http://localhost:3000",
-    
+    "https://estate-frontend-bay.vercel.app",
+    "https://e-state-6xcr.vercel.app",
+    "https://www.estateone.in",
+    "https://estateone.in",  # ✅ Add root domain without www
 ]
 
 # Application definition
@@ -64,12 +67,14 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
     
 ]
 
@@ -120,12 +125,20 @@ WSGI_APPLICATION = 'estateBackend.wsgi.application'
 
 import dj_database_url
 import os
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default="postgresql://estate_one_user:eSO1sAjk4TzxMwhxyFjKku2vTXcMa7tI@dpg-cvfb1ipopnds73b8er7g-a.oregon-postgres.render.com/estate_one",
+#         engine="django.db.backends.postgresql",
+#     )
+# }
 DATABASES = {
     "default": dj_database_url.config(
-        default="postgresql://estate_tjf4_user:ew7te8lz3ARqHMiDdtrc6AgmaDo0N5BP@dpg-cv6mie8gph6c73do4600-a.oregon-postgres.render.com/estate_tjf4",
-        engine="django.db.backends.postgresql",
+        default=os.environ.get('DATABASE_URL'),  # Read from environment
+        engine='django.db.backends.postgresql',
     )
 }
+
+
 
 
 # Password validation
@@ -162,8 +175,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

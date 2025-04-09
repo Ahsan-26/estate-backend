@@ -1,0 +1,20 @@
+# Exported from Render on 2025-03-25T10:31:33Z
+services:
+- type: web
+  name: estate-backend
+  runtime: python
+  repo: https://github.com/Ahsan-26/estate-backend
+  plan: free
+  envVars:
+  - key: DEBUG
+    sync: false
+  - key: DATABASE_URL
+    sync: false
+  - key: SECRET_KEY
+    sync: false
+  region: singapore
+  buildCommand: pip install -r requirements.txt
+  startCommand: |
+     python manage.py migrate && \
+    gunicorn estateBackend.wsgi:application
+version: "1"
