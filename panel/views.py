@@ -4,11 +4,12 @@ from rest_framework.views import APIView
 from django.core.mail import send_mail
 from django.utils.timezone import make_aware
 from django.utils.timezone import localtime
-# from pytz import timezone as pytz_timezone
+from pytz import timezone as pytz_timezone
 from datetime import datetime
 from .models import TimeSlot, Appointment, Inquiry, Blog
 from .serializers import TimeSlotSerializer, AppointmentSerializer, BlogSerializer,InquirySerializer
 from rest_framework import generics
+from django.db.models import F, ExpressionWrapper, IntegerField
 
 class BlogDetailAPIView(generics.RetrieveAPIView):
     queryset = Blog.objects.all()
@@ -25,8 +26,14 @@ class AvailableSlotsView(APIView):
         user_timezone = request.query_params.get("timezone", "Asia/Kolkata")  # Default to IST
 
         # Get all available (not booked) slots
-        slots = TimeSlot.objects.filter(is_booked=False).order_by("date", "start_time")
-
+        # slots = TimeSlot.objects.filter(is_booked=False).order_by("date", "start_time")
+        slots = TimeSlot.objects.annotate(
+            available=ExpressionWrapper(
+                F('max_clients') - F('booked_clients'),
+                output_field=IntegerField()
+            )
+        ).filter(available__gt=0).order_by("date", "start_time")
+        
         available_dates = {}
         for slot in slots:
             slot_date = slot.date.strftime("%Y-%m-%d")
@@ -65,9 +72,15 @@ class BookAppointmentView(APIView):
             return Response({"error": "All fields are required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            time_slot = TimeSlot.objects.get(id=time_slot_id, is_booked=False)
+        #     time_slot = TimeSlot.objects.get(id=time_slot_id, is_booked=False)
+        # except TimeSlot.DoesNotExist:
+        #     return Response({"error": "Selected time slot is no longer available"}, status=status.HTTP_400_BAD_REQUEST)
+            time_slot = TimeSlot.objects.get(id=time_slot_id)
+            if time_slot.booked_clients >= time_slot.max_clients:
+                return Response({"error": "Slot is full"}, status=400)
         except TimeSlot.DoesNotExist:
-            return Response({"error": "Selected time slot is no longer available"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid slot"}, status=400)
+        
 
         # Create and save the appointment
         appointment = Appointment.objects.create(

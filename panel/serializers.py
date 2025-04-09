@@ -53,19 +53,36 @@ class TimeSlotSerializer(serializers.ModelSerializer):
         tz = pytz.timezone(timezone)
         return localtime(obj.end_time, tz).strftime("%I:%M %p")
 
-class AppointmentSerializer(serializers.ModelSerializer):
-    time_slot_details = TimeSlotSerializer(source="time_slot", read_only=True)
+# class AppointmentSerializer(serializers.ModelSerializer):
+#     time_slot_details = TimeSlotSerializer(source="time_slot", read_only=True)
 
-    class Meta:
-        model = Appointment
-        fields = ['id', 'name', 'email', 'phone', 'query', 'time_slot', 'time_slot_details']
+#     class Meta:
+#         model = Appointment
+#         fields = ['id', 'name', 'email', 'phone', 'query', 'time_slot', 'time_slot_details']
 
-    def validate_time_slot(self, value):
-        """Ensure the slot is not already booked"""
-        if Appointment.objects.filter(time_slot=value).exists():
-            raise serializers.ValidationError("This time slot is already booked.")
-        return value
+#     def validate_time_slot(self, value):
+#         """Ensure the slot is not already booked"""
+#         if Appointment.objects.filter(time_slot=value).exists():
+#             raise serializers.ValidationError("This time slot is already booked.")
+#         return value
     
+    
+class TimeSlotSerializer(serializers.ModelSerializer):
+    available_slots = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = TimeSlot
+        fields = ['id', 'date', 'start_time', 'end_time', 
+                 'max_clients', 'booked_clients', 'available_slots']
+    
+    def get_available_slots(self, obj):
+        return obj.max_clients - obj.booked_clients
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    def validate_time_slot(self, value):
+        if value.booked_clients >= value.max_clients:
+            raise serializers.ValidationError("This slot is full")
+        return value
 class InquirySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inquiry

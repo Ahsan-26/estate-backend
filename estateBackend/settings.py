@@ -23,20 +23,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS =[
     "https://estate-frontend-bay.vercel.app/",
     "estate-backend-q57o.onrender.com",
+    "localhost",
+    "127.0.0.1",
+   
      ]
 
 CORS_ALLOWED_ORIGINS = [
+    
     "https://estate-frontend-bay.vercel.app/",  
+     "http://localhost:3000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+   
     "https://estate-frontend-bay.vercel.app/",
-    "https://e-state-6xcr.vercel.app/"
+    "https://e-state-6xcr.vercel.app/",
+     "http://localhost:3000",
     
 ]
 
@@ -109,6 +116,8 @@ WSGI_APPLICATION = 'estateBackend.wsgi.application'
 #         'PORT': '5432',  
 #     }
 # }
+
+
 import dj_database_url
 import os
 DATABASES = {
@@ -117,6 +126,8 @@ DATABASES = {
         engine="django.db.backends.postgresql",
     )
 }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

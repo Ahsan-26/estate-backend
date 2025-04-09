@@ -7,7 +7,11 @@ class TimeSlot(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    is_booked = models.BooleanField(default=False)
+    max_clients = models.PositiveIntegerField(default=1)  # New field
+    booked_clients = models.PositiveIntegerField(default=0)  # New field
+
+    def is_available(self):
+        return self.booked_clients < self.max_clients
 
     def __str__(self):
         return f"{self.date} - {self.start_time} to {self.end_time}"
@@ -24,21 +28,34 @@ class Appointment(models.Model):
     phone = models.CharField(max_length=15)
     query = models.TextField()
     location = models.CharField(max_length=255)
-    time_slot = models.OneToOneField(TimeSlot, on_delete=models.CASCADE)
+    time_slot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE)       
     service_type = models.CharField(max_length=10, choices=SERVICE_CHOICES) 
     def __str__(self):
         return f"Appointment with {self.name} on {self.time_slot.date} at {self.time_slot.start_time}"
 
 # Auto-update `is_booked` status when an appointment is created or deleted
+# @receiver(post_save, sender=Appointment)
+# def mark_slot_as_booked(sender, instance, **kwargs):
+#     instance.time_slot.is_booked = True
+#     instance.time_slot.save()
+
+# @receiver(post_delete, sender=Appointment)
+# def mark_slot_as_available(sender, instance, **kwargs):
+#     instance.time_slot.is_booked = False
+#     instance.time_slot.save()
+
 @receiver(post_save, sender=Appointment)
-def mark_slot_as_booked(sender, instance, **kwargs):
-    instance.time_slot.is_booked = True
-    instance.time_slot.save()
+def update_booked_clients(sender, instance, created, **kwargs):
+    if created:  # Only increment when a new appointment is created
+        time_slot = instance.time_slot
+        time_slot.booked_clients += 1
+        time_slot.save()
 
 @receiver(post_delete, sender=Appointment)
-def mark_slot_as_available(sender, instance, **kwargs):
-    instance.time_slot.is_booked = False
-    instance.time_slot.save()
+def update_booked_clients_on_delete(sender, instance, **kwargs):
+    time_slot = instance.time_slot
+    time_slot.booked_clients -= 1
+    time_slot.save()
     
 from django.db import models
 
