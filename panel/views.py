@@ -103,6 +103,30 @@ class BookAppointmentView(APIView):
         converted_start_time = slot_start_time.astimezone(pytz_timezone(user_timezone))
 
         # ✅ Send confirmation email to the client
+        message = f"""Hi {name},
+
+Thank you for scheduling a call with EstateOne. Your appointment is confirmed!
+
+An advisor will call you on {phone} at the designated hour and help you with your queries. Also, while we try to reach you at precisely the specified time, there could be a slight delay if the advisor is still dealing with a prior appointment. Please give us an extra 5–10 mins.
+
+However, if you still don’t hear from us or you want to reschedule this conversation, just drop an e-mail on this thread and we will sort it out for you.
+
+Please note that all conversations with our advisor will be recorded for regulatory purposes. And we may communicate with you over WhatsApp, e-mail, and SMS. If you prefer to have your communication scheduled only on a specific medium, please let us know and we will accommodate this request.
+
+Appointment Details:
+Date: {time_slot.date}
+Time: {converted_start_time.strftime('%I:%M %p')}
+
+Quick Reminders:
+- The 30-minute conversation will be insightful, so keep your questions ready!
+- We’ll share useful links, quotes, and other details to make everything simpler for you.
+- Don’t worry—we won’t spam you with calls. We’ll only reach out when you ask us to.
+
+We're excited to have you on board and look forward to speaking with you!
+
+Warm regards,
+EstateOne"""
+
         send_mail(
             subject="Appointment Confirmation",
             message=f"Dear {name}, your appointment is confirmed for {time_slot.date} at {converted_start_time.strftime('%I:%M %p')}.",
