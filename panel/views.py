@@ -131,7 +131,7 @@ EstateOne"""
             subject="Appointment Confirmation",
             # message=f"Dear {name}, your appointment is confirmed for {time_slot.date} at {converted_start_time.strftime('%I:%M %p')}.",
             message=message,
-            from_email="rehankhan.upr@gmail.com",  
+            from_email="connect@estateone.in",  
             recipient_list=[email],
             fail_silently=False,
         )

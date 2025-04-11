@@ -184,12 +184,20 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'  
+# EMAIL_PORT = 587  
+# EMAIL_USE_TLS = True  
+# EMAIL_HOST_USER = 'rehankhan.upr@gmail.com' 
+# EMAIL_HOST_PASSWORD = 'wkeidudcklbwvqby' 
+
+# settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  
-EMAIL_PORT = 587  
-EMAIL_USE_TLS = True  
-EMAIL_HOST_USER = 'rehankhan.upr@gmail.com' 
-EMAIL_HOST_PASSWORD = 'wkeidudcklbwvqby' 
+EMAIL_HOST = 'smtpout.secureserver.net'  # GoDaddy's SMTP server
+EMAIL_PORT = 465  # Use 465 for SSL (recommended) or 587 for TLS
+EMAIL_USE_SSL = True  # For port 465 (use EMAIL_USE_TLS=True for port 587)
+EMAIL_HOST_USER = 'connect@estateone.in'  # Full GoDaddy email
+EMAIL_HOST_PASSWORD = 'Arpitarora@12'  # Your email password
 
 import os
 
