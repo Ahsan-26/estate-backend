@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY = 'django-insecure-!01(9e5x0=62%-bif#!+%fkye58u5x*t9kl0$xgkqa91kiw@!)'
 
 # # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = False
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key')  # Use env var in production
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'  # False in production
@@ -35,12 +35,15 @@ ALLOWED_HOSTS = [
     "estateone.in",
      ".onrender.com",
     "127.0.0.1",
-    "localhost",
+    "localhost:8000",
 ]
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:8000",
     "https://estate-frontend-bay.vercel.app", 
     "https://www.estateone.in",
     "https://estateone.in",  # ✅ Add root domain without www
+    
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -48,6 +51,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://e-state-6xcr.vercel.app",
     "https://www.estateone.in",
     "https://estateone.in",  # ✅ Add root domain without www
+    "http://localhost:3000",
+    "http://localhost:8000",
 ]
 
 # Application definition
@@ -104,12 +109,12 @@ WSGI_APPLICATION = 'estateBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # DATABASES = {
 #     'default': {
@@ -131,12 +136,14 @@ import os
 #         engine="django.db.backends.postgresql",
 #     )
 # }
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),  # Read from environment
-        engine='django.db.backends.postgresql',
-    )
-}
+
+
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default=os.environ.get('DATABASE_URL'),  # Read from environment
+#         engine='django.db.backends.postgresql',
+#     )
+# }
 
 
 
@@ -190,16 +197,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # EMAIL_USE_TLS = True  
 # EMAIL_HOST_USER = 'rehankhan.upr@gmail.com' 
 # EMAIL_HOST_PASSWORD = 'wkeidudcklbwvqby' 
-
-# settings.py
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtpout.secureserver.net'  # GoDaddy's SMTP server
-EMAIL_PORT = 587  # Use 465 for SSL (recommended) or 587 for TLS
-EMAIL_USE_TLS = True  # For port 465 (use EMAIL_USE_TLS=True for port 587)
-EMAIL_HOST_USER = 'connect@estateone.in'  # Full GoDaddy email
-EMAIL_HOST_PASSWORD = 'Arpitarora@12'  # Your email password
-
+from decouple import config
 import os
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtpout.secureserver.net'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False  # Should be False when using SSL
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

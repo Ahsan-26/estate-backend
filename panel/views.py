@@ -146,8 +146,8 @@ EstateOne"""
                     f"Phone: {phone}\n"
                     f"Email: {email}\n"
                     f"Query: {query}",
-            from_email="rehankhan.upr@gmail.com",  
-            recipient_list=["rehankhan.upr@gmail.com"],  
+            from_email="connect@estateone.in",  
+            recipient_list=["connect@estateone.in"],  
             fail_silently=False,
         )
 
