@@ -10,6 +10,8 @@ from .models import TimeSlot, Appointment, Inquiry, Blog
 from .serializers import TimeSlotSerializer, AppointmentSerializer, BlogSerializer,InquirySerializer
 from rest_framework import generics
 from django.db.models import F, ExpressionWrapper, IntegerField
+from django.utils import timezone
+from datetime import datetime, time as datetime_time
 
 class BlogDetailAPIView(generics.RetrieveAPIView):
     queryset = Blog.objects.all()
@@ -24,9 +26,9 @@ class BlogListAPIView(generics.ListAPIView):
 class AvailableSlotsView(APIView):
     def get(self, request):
         user_timezone = request.query_params.get("timezone", "Asia/Kolkata")  # Default to IST
-
+        now = timezone.now()  # Get current time in UTC
+        
         # Get all available (not booked) slots
-        # slots = TimeSlot.objects.filter(is_booked=False).order_by("date", "start_time")
         slots = TimeSlot.objects.annotate(
             available=ExpressionWrapper(
                 F('max_clients') - F('booked_clients'),
@@ -41,10 +43,17 @@ class AvailableSlotsView(APIView):
             # Convert slot time to user-specified timezone
             slot_start_time = make_aware(datetime.combine(slot.date, slot.start_time))
             converted_start_time = slot_start_time.astimezone(pytz_timezone(user_timezone))
-
+            
             slot_end_time = make_aware(datetime.combine(slot.date, slot.end_time))
             converted_end_time = slot_end_time.astimezone(pytz_timezone(user_timezone))
 
+            # Get current time in user's timezone for comparison
+            current_time_in_tz = now.astimezone(pytz_timezone(user_timezone))
+            
+            # Skip slots that are in the past
+            if converted_start_time < current_time_in_tz:
+                continue
+                
             # Add slot under the corresponding date
             if slot_date not in available_dates:
                 available_dates[slot_date] = []
